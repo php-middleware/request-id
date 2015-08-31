@@ -1,0 +1,29 @@
+{
+    "name": "php-middleware/request-id",
+    "description": "Request Id middleware with PSR-7",
+    "type": "library",
+    "keywords": [
+        "middleware",
+        "psr",
+        "psr-7",
+        "request-id"
+    ],
+    "require": {
+        "php": ">=5.5",
+        "psr/log": "^1.0.0",
+        "psr/http-message": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhpMiddleware\\RequestId\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpMiddlewareTest\\RequestId\\": "test/"
+        }
+    }
+}
