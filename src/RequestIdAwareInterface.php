@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpMiddlewareTest\RequestId;
+namespace PhpMiddleware\RequestId;
 
 interface RequestIdAwareInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpMiddlewareTest\RequestId\Exception;
+namespace PhpMiddleware\RequestId\Exception;
 
 class MissingRequestId extends \UnexpectedValueException
 {

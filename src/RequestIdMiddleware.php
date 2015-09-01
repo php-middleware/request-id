@@ -1,9 +1,9 @@
 <?php
 
-namespace PhpMiddlewareTest\RequestId;
+namespace PhpMiddleware\RequestId;
 
-use PhpMiddlewareTest\RequestId\Generator\GeneratorInterface;
-use PhpMiddlewareTest\RequestId\RequestIdAwareInterface;
+use PhpMiddleware\RequestId\Generator\GeneratorInterface;
+use PhpMiddleware\RequestId\RequestIdAwareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

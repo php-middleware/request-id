@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpMiddlewareTest\RequestId\Generator;
+namespace PhpMiddleware\RequestId\Generator;
 
 interface GeneratorInterface
 {
