@@ -27,6 +27,7 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $outFunction = function ($request, $response) use (&$calledOut) {
             $calledOut = true;
+
             return $response;
         };
 
