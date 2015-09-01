@@ -2,7 +2,7 @@
 
 namespace PhpMiddlewareTest\RequestId\Exception;
 
-class NotGenerated extends MissingRequestId
+class MissingRequestId extends \UnexpectedValueException
 {
 
 }
