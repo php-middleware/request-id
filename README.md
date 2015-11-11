@@ -40,11 +40,11 @@ How to get request id in my application?
 
 ### Monolog processor
 
-We provide simple [Monolog](https://github.com/Seldaek/monolog) [processor](MonologProcessor.php) to add request it to every log entry!
+We provide simple [Monolog](https://github.com/Seldaek/monolog) [processor](src/MonologProcessor.php) to add request it to every log entry!
 
 ### Request decorator
 
-[RequestDecorator](RequestDecorator.php) adds header with request id to your request object. It's useful when your microservices communicates between using PSR-7 HTTP messages e.g. [Guzzle](https://github.com/guzzle/guzzle).
+[RequestDecorator](src/RequestDecorator.php) adds header with request id to your request object. It's useful when your microservices communicates between using PSR-7 HTTP messages e.g. [Guzzle](https://github.com/guzzle/guzzle).
 
 ### Request Id generators
 
