@@ -44,7 +44,7 @@ We provide simple [Monolog](https://github.com/Seldaek/monolog) [processor](src/
 
 ### Request decorator
 
-[RequestDecorator](src/RequestDecorator.php) adds header with request id to your request object. It's useful when your microservices communicates between using PSR-7 HTTP messages e.g. [Guzzle](https://github.com/guzzle/guzzle).
+[RequestDecorator](src/RequestDecorator.php) adds header with request id to your request object. It's useful when your microservices communicate between using PSR-7 HTTP messages e.g. [Guzzle](https://github.com/guzzle/guzzle).
 
 ### Request Id generators
 
