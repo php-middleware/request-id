@@ -54,21 +54,33 @@ To generate request id you need to use implementation of `PhpMiddleware\RequestI
 
 Simple generator using [uniqid](http://php.net/manual/en/function.uniqid.php) function.
 
-#### `RhumsaaUuid1Generator`
+#### `RamseyUuid1Generator`
 
-[UUID](https://tools.ietf.org/html/rfc4122)1 implementations of [Rhumsaa\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
+[UUID](https://tools.ietf.org/html/rfc4122)1 implementations of [Ramsey\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
 
-#### `RhumsaaUuid3Generator`
+#### `RamseyUuid3Generator`
 
-[UUID](https://tools.ietf.org/html/rfc4122)3 implementations of [Rhumsaa\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
+[UUID](https://tools.ietf.org/html/rfc4122)3 implementations of [Ramsey\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
 
-#### `RhumsaaUuid4Generator`
+#### `RamseyUuid4Generator`
 
-[UUID](https://tools.ietf.org/html/rfc4122)4 implementations of [Rhumsaa\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
+[UUID](https://tools.ietf.org/html/rfc4122)4 implementations of [Ramsey\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
 
-#### `RhumsaaUuid5Generator`
+#### `RamseyUuid4StaticGenerator`
 
-[UUID](https://tools.ietf.org/html/rfc4122)5 implementations of [Rhumsaa\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
+Generates Uuid4 like `RamseyUuid4Generator` however it's not require any dependency (it use static factory method).
+
+#### `RamseyUuid5Generator`
+
+[UUID](https://tools.ietf.org/html/rfc4122)5 implementations of [Ramsey\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
+
+#### `PrefixedGenerator`
+
+Adds prefix to generated request id.
+
+#### `Md5Generator`
+
+This generator converts generated request id to md5 hash.
 
 ## It's just works with any modern php framework!
 

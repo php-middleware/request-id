@@ -2,15 +2,15 @@
 
 namespace PhpMiddleware\RequestId\Generator;
 
-use Rhumsaa\Uuid\Uuid;
+use Ramsey\Uuid\Uuid;
 
-final class RhumsaaUuid4Generator implements GeneratorInterface
+final class RamseyUuid4StaticGenerator implements GeneratorInterface
 {
     /**
      * @return string
      */
     public function generateRequestId()
     {
-        return (string) Uuid::uuid4();
+        return Uuid::uuid4()->toString();
     }
 }

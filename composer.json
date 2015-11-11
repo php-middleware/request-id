@@ -14,11 +14,11 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8.6",
-        "ramsey/uuid": "^2.8",
+        "ramsey/uuid": "^3.0",
         "zendframework/zend-diactoros": "^1.1.3"
     },
     "suggest": {
-        "ramsey/uuid": "To use Rhumsaa\\Uuid generator"
+        "ramsey/uuid": "To use Ramsey\\Uuid 3.0 generator"
     },
     "autoload": {
         "psr-4": {
