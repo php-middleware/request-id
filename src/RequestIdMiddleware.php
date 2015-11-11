@@ -30,26 +30,30 @@ class RequestIdMiddleware implements RequestIdProviderInterface
     /**
      * @var bool
      */
-    protected $emmitToResponse;
+    protected $responseHeader;
 
     /**
      *
      * @var string
      */
-    protected $headerName;
+    protected $requestHeader;
 
     /**
      * @param GeneratorInterface $generator
      * @param bool $allowOverride
-     * @param bool $emmitToResponse
-     * @param string $headerName
+     * @param bool $responseHeader
+     * @param string $requestHeader
      */
-    public function __construct(GeneratorInterface $generator, $allowOverride = true, $emmitToResponse = true, $headerName = self::DEFAULT_HEADER_REQUEST_ID)
-    {
+    public function __construct(
+        GeneratorInterface $generator,
+        $allowOverride = true,
+        $responseHeader = self::DEFAULT_HEADER_REQUEST_ID,
+        $requestHeader = self::DEFAULT_HEADER_REQUEST_ID
+    ) {
         $this->generator = $generator;
         $this->allowOverride = $allowOverride;
-        $this->emmitToResponse = $emmitToResponse;
-        $this->headerName = $headerName;
+        $this->responseHeader = $responseHeader;
+        $this->requestHeader = $requestHeader;
     }
 
     /**
@@ -66,8 +70,8 @@ class RequestIdMiddleware implements RequestIdProviderInterface
 
         $nextResponse = $next($requestWithAttribute, $response);
 
-        if ($this->emmitToResponse === true) {
-            return $nextResponse->withHeader($this->headerName, $this->requestId);
+        if (is_string($this->responseHeader)) {
+            return $nextResponse->withHeader($this->responseHeader, $this->requestId);
         }
         return $nextResponse;
     }
@@ -96,10 +100,10 @@ class RequestIdMiddleware implements RequestIdProviderInterface
     protected function getRequestIdFromRequest(ServerRequestInterface $request)
     {
         if ($this->isPossibleToGetFromRequest($request)) {
-            $requestId = $request->getHeaderLine($this->headerName);
+            $requestId = $request->getHeaderLine($this->requestHeader);
 
             if (empty($requestId)) {
-                throw new Exception\MissingRequestId(sprintf('Missing request id in "%s" request header', $this->headerName));
+                throw new Exception\MissingRequestId(sprintf('Missing request id in "%s" request header', $this->requestHeader));
             }
         } else {
             $requestId = $this->generator->generateRequestId();
@@ -118,6 +122,6 @@ class RequestIdMiddleware implements RequestIdProviderInterface
      */
     protected function isPossibleToGetFromRequest(ServerRequestInterface $request)
     {
-        return $this->allowOverride === true && $request->hasHeader($this->headerName);
+        return $this->allowOverride === true && $request->hasHeader($this->requestHeader);
     }
 }

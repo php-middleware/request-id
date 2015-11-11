@@ -2,7 +2,7 @@
 
 namespace PhpMiddleware\RequestId\Generator;
 
-class PhpUniqidGenerator implements GeneratorInterface
+final class PhpUniqidGenerator implements GeneratorInterface
 {
     /**
      * @var string

@@ -2,7 +2,7 @@
 
 PSR-7 request id middleware
 
-This middleware provide framework-agnostic possibility to generate and add to request/response header request id.
+This middleware provide framework-agnostic possibility to generate and add to request/response's header request id.
 
 ## Installation
 
@@ -28,10 +28,10 @@ $app->run($request, $response);
 
 All middleware constructor options:
 
-* `PhpMiddleware\RequestId\Generator\GeneratorInterface` `$generator` - generator implementation with method `generateRequestId`
-* `bool` `$allowOverride` (default `true`) - if `true` and request id header exists in incoming request, then value from request header will be used in middleware, generator will be avoid
-* `bool` `$emmitToResponse` (default `true`) - if `true` request id will be added to response header
-* `string` `$headerName` (default `X-Request-Id`) - header name
+* `PhpMiddleware\RequestId\Generator\GeneratorInterface` `$generator` - generator implementation (required)
+* `bool` `$allowOverride` (default `true`) - if `true` and request id header exists in incoming request, then value from request header will be used in middleware, using generator will be avoid
+* `string` `$responseHeader` (default `X-Request-Id`) - request id will be added to response as header with given name. If it's not string request id will be not added to response
+* `string` `$requestHeader` (default `X-Request-Id`) - request header name
 
 How to get request id in my application?
 

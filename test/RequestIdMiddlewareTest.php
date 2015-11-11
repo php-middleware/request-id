@@ -46,7 +46,7 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
     {
         $this->generator->expects($this->once())->method('generateRequestId')->willReturn('123456789');
 
-        $middleware = new RequestIdMiddleware($this->generator, true, false);
+        $middleware = new RequestIdMiddleware($this->generator, true, null);
         $request = new ServerRequest();
         $response = new Response();
         $calledOut = false;

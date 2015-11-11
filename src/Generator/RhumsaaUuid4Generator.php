@@ -4,7 +4,7 @@ namespace PhpMiddleware\RequestId\Generator;
 
 use Rhumsaa\Uuid\Uuid;
 
-class RhumsaaUuid4Generator implements GeneratorInterface
+final class RhumsaaUuid4Generator implements GeneratorInterface
 {
     /**
      * @return mixed
