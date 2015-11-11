@@ -38,6 +38,10 @@ How to get request id in my application?
 * Middleware implements `RequestIdProviderInterface`, so you are able to use `getRequestId()` method,
 * from `request-id` attribute in `ServerRequest` object (`$request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME)`).
 
+### Monolog processor
+
+We provide simple [Monolog](https://github.com/Seldaek/monolog) [processor](MonologProcessor.php) to add request it to every log entry!
+
 ### Request Id generators
 
 To generate request id you need to use implementation of `PhpMiddleware\RequestId\Generator\GeneratorInterface`. There are predefined generators in `PhpMiddleware\RequestId\Generator\` namespace:
