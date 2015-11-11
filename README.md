@@ -50,35 +50,35 @@ We provide simple [Monolog](https://github.com/Seldaek/monolog) [processor](src/
 
 To generate request id you need to use implementation of `PhpMiddleware\RequestId\Generator\GeneratorInterface`. There are predefined generators in `PhpMiddleware\RequestId\Generator\` namespace:
 
-#### `PhpUniqidGenerator`
+#### PhpUniqidGenerator
 
 Simple generator using [uniqid](http://php.net/manual/en/function.uniqid.php) function.
 
-#### `RamseyUuid1Generator`
+#### RamseyUuid1Generator
 
 [UUID](https://tools.ietf.org/html/rfc4122)1 implementations of [Ramsey\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
 
-#### `RamseyUuid3Generator`
+#### RamseyUuid3Generator
 
 [UUID](https://tools.ietf.org/html/rfc4122)3 implementations of [Ramsey\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
 
-#### `RamseyUuid4Generator`
+#### RamseyUuid4Generator
 
 [UUID](https://tools.ietf.org/html/rfc4122)4 implementations of [Ramsey\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
 
-#### `RamseyUuid4StaticGenerator`
+#### RamseyUuid4StaticGenerator
 
 Generates Uuid4 like `RamseyUuid4Generator` however it's not require any dependency (it use static factory method).
 
-#### `RamseyUuid5Generator`
+#### RamseyUuid5Generator
 
 [UUID](https://tools.ietf.org/html/rfc4122)5 implementations of [Ramsey\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
 
-#### `PrefixedGenerator`
+#### PrefixedGenerator
 
-Adds prefix to generated request id.
+It adds prefix to generated request id.
 
-#### `Md5Generator`
+#### Md5Generator
 
 This generator converts generated request id to md5 hash.
 
