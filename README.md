@@ -35,8 +35,8 @@ All middleware constructor options:
 
 How to get request id in my application?
 
-* middleware implements `RequestIdProviderInterface`, so you are able to use `getRequestId()` method,
-* from `request-id` attribute in `ServerRequest` object (`$request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME`)),
+* Middleware implements `RequestIdProviderInterface`, so you are able to use `getRequestId()` method,
+* from `request-id` attribute in `ServerRequest` object (`$request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME)`).
 
 ### Request Id generators
 
