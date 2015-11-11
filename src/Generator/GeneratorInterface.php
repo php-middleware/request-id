@@ -5,7 +5,7 @@ namespace PhpMiddleware\RequestId\Generator;
 interface GeneratorInterface
 {
     /**
-     * @return mixed unique value
+     * @return string unique value
      */
     public function generateRequestId();
 }

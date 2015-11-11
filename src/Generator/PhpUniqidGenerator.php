@@ -27,7 +27,7 @@ final class PhpUniqidGenerator implements GeneratorInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function generateRequestId()
     {

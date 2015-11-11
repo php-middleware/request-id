@@ -109,7 +109,10 @@ class RequestIdMiddleware implements RequestIdProviderInterface
             $requestId = $this->generator->generateRequestId();
 
             if (empty($requestId)) {
-                throw new Exception\NotGenerated('Generator return empty value');
+                throw new Exception\InvalidRequestId('Generator return empty value');
+            }
+            if (!is_string($requestId)) {
+                throw new Exception\InvalidRequestId('Request id is not a string');
             }
         }
         return $requestId;

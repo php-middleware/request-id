@@ -78,7 +78,7 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dataproviderEmptyRequestIdValues
-     * @expectedException PhpMiddleware\RequestId\Exception\MissingRequestId
+     * @expectedException PhpMiddleware\RequestId\Exception\InvalidRequestId
      */
     public function testTryToGenerateEmptyRequestId($emptyValue)
     {
@@ -99,6 +99,20 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
             [''],
             [null],
         ];
+    }
+
+    /**
+     * @expectedException PhpMiddleware\RequestId\Exception\InvalidRequestId
+     */
+    public function testTryToGenerateNotStringRequestId()
+    {
+        $this->generator->expects($this->once())->method('generateRequestId')->willReturn(1);
+
+        $middleware = new RequestIdMiddleware($this->generator);
+        $request = new ServerRequest();
+        $response = new Response();
+
+        call_user_func($middleware, $request, $response, function () {});
     }
 
     public function testDisallowOverrideButHeaderExists()

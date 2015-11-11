@@ -7,7 +7,7 @@ use Rhumsaa\Uuid\Uuid;
 final class RhumsaaUuid4Generator implements GeneratorInterface
 {
     /**
-     * @return mixed
+     * @return string
      */
     public function generateRequestId()
     {

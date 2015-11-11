@@ -30,7 +30,7 @@ final class RhumsaaUuid3Generator implements GeneratorInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function generateRequestId()
     {
