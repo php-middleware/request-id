@@ -38,6 +38,18 @@ All middleware constructor options:
 * middleware implements `RequestIdProviderInterface`, so you are able to use `getRequestId` method,
 * from `request-id` attibute `ServerRequest` object (`$request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME`)),
 
+### Request Id generators
+
+To generate request id you need to use implementation of `PhpMiddleware\RequestId\Generator\GeneratorInterface`. There are predefined generators in `PhpMiddleware\RequestId\Generator\` namespace:
+
+#### `PhpUniqidGenerator`
+
+Simple generator using [uniqid](http://php.net/manual/en/function.uniqid.php) function.
+
+#### `RhumsaaUuid4Generator`
+
+[UUID](https://tools.ietf.org/html/rfc4122)4 implementations of [Rhumsaa\Uuid](https://github.com/ramsey/uuid). To use it you need to add `ramsey/uuid` dependency to your `composer.json`.
+
 ## It's just works with any modern php framework!
 
 Middleware tested on:
