@@ -9,10 +9,12 @@ This middleware provide framework-agnostic possibility to generate and add to re
 ```json
 {
     "require": {
-        "php-middleware/request-id": "^1.0.0"
+        "php-middleware/request-id": "^2.0.0"
     }
 }
 ```
+
+## Usage
 
 This middleware require in contructor `PhpMiddleware\RequestId\Generator\GeneratorInterface` implementation.
 
@@ -30,6 +32,11 @@ All middleware constructor options:
 * `bool` `$allowOverride` (default `true`) - if `true` and request id header exists in incoming request, then value from request header will be used in middleware, generator will be avoid
 * `bool` `$emmitToResponse` (default `true`) - if `true` request id will be added to response header
 * `string` `$headerName` (default `X-Request-Id`) - header name
+
+### How to get request id in my application?
+
+* middleware implements `RequestIdProviderInterface`, so you are able to use `getRequestId` method,
+* from `request-id` attibute `ServerRequest` object (`$request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME`)),
 
 ## It's just works with any modern php framework!
 

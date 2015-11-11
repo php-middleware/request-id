@@ -2,7 +2,7 @@
 
 namespace PhpMiddleware\RequestId;
 
-interface RequestIdAwareInterface
+interface RequestIdProviderInterface
 {
     public function getRequestId();
 }

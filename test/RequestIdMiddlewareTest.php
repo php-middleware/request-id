@@ -4,6 +4,7 @@ namespace PhpMiddlewareTestTest\RequestId;
 
 use PhpMiddleware\RequestId\Generator\GeneratorInterface;
 use PhpMiddleware\RequestId\RequestIdMiddleware;
+use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
 
@@ -25,8 +26,10 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
         $response = new Response();
         $calledOut = false;
 
-        $outFunction = function ($request, $response) use (&$calledOut) {
+        $outFunction = function (ServerRequestInterface $request, $response) use (&$calledOut) {
             $calledOut = true;
+
+            $this->assertSame('123456789', $request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME));
 
             return $response;
         };
@@ -35,7 +38,7 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($calledOut, 'Out is not called');
         $this->assertNotSame($response, $result);
-        $this->assertEquals('123456789', $result->getHeaderLine(RequestIdMiddleware::HEADER_REQUEST_ID));
+        $this->assertEquals('123456789', $result->getHeaderLine(RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID));
         $this->assertSame('123456789', $middleware->getRequestId());
     }
 
@@ -51,6 +54,8 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
         $outFunction = function ($request, $response) use (&$calledOut) {
             $calledOut = true;
 
+            $this->assertSame('123456789', $request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME));
+
             return $response;
         };
 
@@ -58,7 +63,7 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($calledOut, 'Out is not called');
         $this->assertSame($response, $result);
-        $this->assertEquals(null, $result->getHeaderLine(RequestIdMiddleware::HEADER_REQUEST_ID));
+        $this->assertEquals(null, $result->getHeaderLine(RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID));
         $this->assertSame('123456789', $middleware->getRequestId());
     }
 
@@ -101,12 +106,14 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
         $this->generator->expects($this->once())->method('generateRequestId')->willReturn('123456789');
 
         $middleware = new RequestIdMiddleware($this->generator, false);
-        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::HEADER_REQUEST_ID => '987654321']);
+        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID => '987654321']);
         $response = new Response();
         $calledOut = false;
 
         $outFunction = function ($request, $response) use (&$calledOut) {
             $calledOut = true;
+
+            $this->assertSame('123456789', $request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME));
 
             return $response;
         };
@@ -115,7 +122,7 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($calledOut, 'Out is not called');
         $this->assertNotSame($response, $result);
-        $this->assertEquals('123456789', $result->getHeaderLine(RequestIdMiddleware::HEADER_REQUEST_ID));
+        $this->assertEquals('123456789', $result->getHeaderLine(RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID));
         $this->assertSame('123456789', $middleware->getRequestId());
     }
 
@@ -124,12 +131,14 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
         $this->generator->expects($this->never())->method('generateRequestId');
 
         $middleware = new RequestIdMiddleware($this->generator);
-        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::HEADER_REQUEST_ID => '987654321']);
+        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID => '987654321']);
         $response = new Response();
         $calledOut = false;
 
         $outFunction = function ($request, $response) use (&$calledOut) {
             $calledOut = true;
+
+            $this->assertSame('987654321', $request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME));
 
             return $response;
         };
@@ -138,7 +147,7 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($calledOut, 'Out is not called');
         $this->assertNotSame($response, $result);
-        $this->assertEquals('987654321', $result->getHeaderLine(RequestIdMiddleware::HEADER_REQUEST_ID));
+        $this->assertEquals('987654321', $result->getHeaderLine(RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID));
         $this->assertSame('987654321', $middleware->getRequestId());
     }
 
@@ -150,7 +159,7 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
         $this->generator->expects($this->never())->method('generateRequestId');
 
         $middleware = new RequestIdMiddleware($this->generator);
-        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::HEADER_REQUEST_ID => '']);
+        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID => '']);
         $response = new Response();
 
         call_user_func($middleware, $request, $response, function(){});

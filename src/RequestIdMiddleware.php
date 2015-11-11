@@ -3,13 +3,14 @@
 namespace PhpMiddleware\RequestId;
 
 use PhpMiddleware\RequestId\Generator\GeneratorInterface;
-use PhpMiddleware\RequestId\RequestIdAwareInterface;
+use PhpMiddleware\RequestId\RequestIdProviderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RequestIdMiddleware implements RequestIdAwareInterface
+class RequestIdMiddleware implements RequestIdProviderInterface
 {
-    const HEADER_REQUEST_ID = 'X-Request-Id';
+    const DEFAULT_HEADER_REQUEST_ID = 'X-Request-Id';
+    const ATTRIBUTE_NAME = 'request-id';
 
     /**
      * @var GeneratorInterface
@@ -43,7 +44,7 @@ class RequestIdMiddleware implements RequestIdAwareInterface
      * @param bool $emmitToResponse
      * @param string $headerName
      */
-    public function __construct(GeneratorInterface $generator, $allowOverride = true, $emmitToResponse = true, $headerName = self::HEADER_REQUEST_ID)
+    public function __construct(GeneratorInterface $generator, $allowOverride = true, $emmitToResponse = true, $headerName = self::DEFAULT_HEADER_REQUEST_ID)
     {
         $this->generator = $generator;
         $this->allowOverride = $allowOverride;
@@ -54,39 +55,21 @@ class RequestIdMiddleware implements RequestIdAwareInterface
     /**
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
-     * @param callable $out
+     * @param callable $next
      *
      * @return ResponseInterface
-     *
-     * @throws Exception\NotGenerated
-     * @throws Exception\MissingRequestId
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $out)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
-        $header = $this->headerName;
+        $this->requestId = $this->getRequestIdFromRequest($request);
+        $requestWithAttribute = $request->withAttribute(self::ATTRIBUTE_NAME, $this->requestId);
 
-        if ($this->isPossibleToGetFromRequest($request)) {
-            $requestId = $request->getHeaderLine($header);
-
-            if (empty($requestId)) {
-                throw new Exception\MissingRequestId(sprintf('Missing request id in "%s" request header', $header));
-            }
-        } else {
-            $requestId = $this->generator->generateRequestId();
-
-            if (empty($requestId)) {
-                throw new Exception\NotGenerated('Generator return empty value');
-            }
-            $request = $request->withHeader($header, $requestId);
-        }
-        $this->requestId = $requestId;
-
-        $outResponse = $out($request, $response);
+        $nextResponse = $next($requestWithAttribute, $response);
 
         if ($this->emmitToResponse === true) {
-            $outResponse = $outResponse->withHeader($header, $requestId);
+            return $nextResponse->withHeader($this->headerName, $this->requestId);
         }
-        return $outResponse;
+        return $nextResponse;
     }
 
     /**
@@ -104,6 +87,33 @@ class RequestIdMiddleware implements RequestIdAwareInterface
 
     /**
      * @param ServerRequestInterface $request
+     *
+     * @return mixed
+     *
+     * @throws Exception\MissingRequestId
+     * @throws Exception\NotGenerated
+     */
+    protected function getRequestIdFromRequest(ServerRequestInterface $request)
+    {
+        if ($this->isPossibleToGetFromRequest($request)) {
+            $requestId = $request->getHeaderLine($this->headerName);
+
+            if (empty($requestId)) {
+                throw new Exception\MissingRequestId(sprintf('Missing request id in "%s" request header', $this->headerName));
+            }
+        } else {
+            $requestId = $this->generator->generateRequestId();
+
+            if (empty($requestId)) {
+                throw new Exception\NotGenerated('Generator return empty value');
+            }
+        }
+        return $requestId;
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     *
      * @return bool
      */
     protected function isPossibleToGetFromRequest(ServerRequestInterface $request)
