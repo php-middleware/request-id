@@ -1,6 +1,6 @@
 # request-id middleware [![Build Status](https://travis-ci.org/php-middleware/request-id.svg?branch=master)](https://travis-ci.org/php-middleware/request-id)
 
-Request Id middleware with PSR-7
+PSR-7 request id middleware
 
 This middleware provide framework-agnostic possibility to generate and add to request/response header request id.
 
@@ -33,10 +33,10 @@ All middleware constructor options:
 * `bool` `$emmitToResponse` (default `true`) - if `true` request id will be added to response header
 * `string` `$headerName` (default `X-Request-Id`) - header name
 
-### How to get request id in my application?
+How to get request id in my application?
 
-* middleware implements `RequestIdProviderInterface`, so you are able to use `getRequestId` method,
-* from `request-id` attibute `ServerRequest` object (`$request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME`)),
+* middleware implements `RequestIdProviderInterface`, so you are able to use `getRequestId()` method,
+* from `request-id` attribute in `ServerRequest` object (`$request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME`)),
 
 ### Request Id generators
 
