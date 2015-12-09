@@ -32,7 +32,7 @@ class RequestIdMiddleware implements RequestIdProviderInterface
     protected $requestId;
 
     /**
-     * @var bool
+     * @var string
      */
     protected $responseHeader;
 
@@ -45,7 +45,7 @@ class RequestIdMiddleware implements RequestIdProviderInterface
     /**
      * @param GeneratorInterface $generator
      * @param bool|OverridePolicyInterface $allowOverride
-     * @param bool $responseHeader
+     * @param string $responseHeader
      * @param string $requestHeader
      */
     public function __construct(

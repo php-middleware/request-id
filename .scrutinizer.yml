@@ -1,0 +1,13 @@
+checks:
+    php: true
+build:
+    environment:
+        php:
+            version: 5.6.16
+    tests:
+        override:
+            -
+                command: 'phpunit'
+                coverage:
+                    file: 'tmp/phpunit-coverage-clover.xml'
+                    format: 'php-clover'
