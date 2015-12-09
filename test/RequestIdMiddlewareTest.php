@@ -205,7 +205,7 @@ class RequestIdMiddlewareTest extends PHPUnit_Framework_TestCase
         $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID => '987654321']);
 
         $policy = $this->getMock(OverridePolicyInterface::class);
-        $policy->method('isAllowToOverride')->willReturn(false);
+        $policy->method('isAllowToOverride')->with($request)->willReturn(false);
         $response = new Response();
 
         $middleware = new RequestIdMiddleware($this->generator, $policy);
