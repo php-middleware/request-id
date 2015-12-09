@@ -103,7 +103,10 @@ class RequestIdMiddleware implements RequestIdProviderInterface
             $requestId = $request->getHeaderLine($this->requestHeader);
 
             if (empty($requestId)) {
-                throw new Exception\MissingRequestId(sprintf('Missing request id in "%s" request header', $this->requestHeader));
+                throw new Exception\MissingRequestId(sprintf(
+                    'Missing request id in "%s" request header',
+                    $this->requestHeader
+                ));
             }
         } else {
             $requestId = $this->generator->generateRequestId();
