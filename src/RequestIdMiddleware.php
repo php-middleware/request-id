@@ -28,7 +28,7 @@ class RequestIdMiddleware implements RequestIdProviderInterface
     protected $requestId;
 
     /**
-     * @var bool
+     * @var string
      */
     protected $responseHeader;
 
