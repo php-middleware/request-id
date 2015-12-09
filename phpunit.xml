@@ -7,6 +7,10 @@
         </testsuite>
     </testsuites>
 
+    <logging>
+        <log type="coverage-clover" target="phpunit-coverage-clover.xml"/>
+    </logging>
+
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>

@@ -1,0 +1,10 @@
+checks:
+    php: true
+build:
+    tests:
+        override:
+            -
+                command: 'phpunit --coverage-clover=phpunit-coverage-clover.xml'
+                coverage:
+                    file: 'phpunit-coverage-clover.xml'
+                    format: 'php-clover'
