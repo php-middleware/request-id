@@ -1,4 +1,4 @@
-# request-id middleware [![Build Status](https://travis-ci.org/php-middleware/request-id.svg?branch=master)](https://travis-ci.org/php-middleware/request-id) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/php-middleware/request-id/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/php-middleware/request-id/?branch=master)
+# request-id middleware [![Build Status](https://travis-ci.org/php-middleware/request-id.svg?branch=master)](https://travis-ci.org/php-middleware/request-id) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/php-middleware/request-id/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/php-middleware/request-id/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/php-middleware/request-id/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/php-middleware/request-id/?branch=master)
 
 PSR-7 request id middleware
 
