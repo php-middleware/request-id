@@ -9,6 +9,7 @@
 
     <logging>
         <log type="coverage-clover" target="tmp/phpunit-coverage-clover.xml"/>
+        <log type="coverage-html" target="tmp/" />
     </logging>
 
     <filter>
