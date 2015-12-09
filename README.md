@@ -29,7 +29,7 @@ $app->run($request, $response);
 All middleware constructor options:
 
 * `PhpMiddleware\RequestId\Generator\GeneratorInterface` `$generator` - generator implementation (required)
-* `bool` `$allowOverride` (default `true`) - if `true` and request id header exists in incoming request, then value from request header will be used in middleware, using generator will be avoid
+* `bool|PhpMiddleware\RequestId\OverridePolicy\OverridePolicyInterface` `$allowOverride` (default `true`) - if `true` and request id header exists in incoming request, then value from request header will be used in middleware, using generator will be avoid
 * `string` `$responseHeader` (default `X-Request-Id`) - request id will be added to response as header with given name. If it's not string request id will be not added to response
 * `string` `$requestHeader` (default `X-Request-Id`) - request header name
 
@@ -37,6 +37,10 @@ How to get request id in my application?
 
 * Middleware implements `RequestIdProviderInterface`, so you are able to use `getRequestId()` method,
 * from `request-id` attribute in `ServerRequest` object (`$request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME)`).
+
+### Override policy
+
+You can add your own logic to decide when override incoming request id. You can implement `OverridePolicyInterface` and pass it as `$allowOverride` variable in constructor.
 
 ### Monolog processor
 
