@@ -2,7 +2,11 @@
 
 namespace PhpMiddleware\RequestId;
 
+use PhpMiddleware\RequestId\Exception\InvalidRequestId;
+use PhpMiddleware\RequestId\Exception\MissingRequestId;
+use PhpMiddleware\RequestId\Exception\NotGenerated;
 use PhpMiddleware\RequestId\Generator\GeneratorInterface;
+use PhpMiddleware\RequestId\OverridePolicy\OverridePolicyInterface;
 use PhpMiddleware\RequestId\RequestIdProviderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,7 +22,7 @@ class RequestIdMiddleware implements RequestIdProviderInterface
     protected $generator;
 
     /**
-     * @var bool
+     * @var bool|OverridePolicyInterface
      */
     protected $allowOverride;
 
@@ -40,7 +44,7 @@ class RequestIdMiddleware implements RequestIdProviderInterface
 
     /**
      * @param GeneratorInterface $generator
-     * @param bool $allowOverride
+     * @param bool|OverridePolicyInterface $allowOverride
      * @param bool $responseHeader
      * @param string $requestHeader
      */
@@ -79,12 +83,12 @@ class RequestIdMiddleware implements RequestIdProviderInterface
     /**
      * @return mixed
      *
-     * @throws Exception\NotGenerated
+     * @throws NotGenerated
      */
     public function getRequestId()
     {
         if ($this->requestId === null) {
-            throw new Exception\NotGenerated('Request id is not generated yet');
+            throw new NotGenerated('Request id is not generated yet');
         }
         return $this->requestId;
     }
@@ -94,8 +98,8 @@ class RequestIdMiddleware implements RequestIdProviderInterface
      *
      * @return mixed
      *
-     * @throws Exception\MissingRequestId
-     * @throws Exception\NotGenerated
+     * @throws MissingRequestId
+     * @throws NotGenerated
      */
     protected function getRequestIdFromRequest(ServerRequestInterface $request)
     {
@@ -103,16 +107,16 @@ class RequestIdMiddleware implements RequestIdProviderInterface
             $requestId = $request->getHeaderLine($this->requestHeader);
 
             if (empty($requestId)) {
-                throw new Exception\MissingRequestId(sprintf('Missing request id in "%s" request header', $this->requestHeader));
+                throw new MissingRequestId(sprintf('Missing request id in "%s" request header', $this->requestHeader));
             }
         } else {
             $requestId = $this->generator->generateRequestId();
 
             if (empty($requestId)) {
-                throw new Exception\InvalidRequestId('Generator return empty value');
+                throw new InvalidRequestId('Generator return empty value');
             }
             if (!is_string($requestId)) {
-                throw new Exception\InvalidRequestId('Request id is not a string');
+                throw new InvalidRequestId('Request id is not a string');
             }
         }
         return $requestId;
@@ -125,6 +129,12 @@ class RequestIdMiddleware implements RequestIdProviderInterface
      */
     protected function isPossibleToGetFromRequest(ServerRequestInterface $request)
     {
-        return $this->allowOverride === true && $request->hasHeader($this->requestHeader);
+        if ($this->allowOverride instanceof OverridePolicyInterface) {
+            $allowOverride = $this->allowOverride->isAllowToOverride($request);
+        } else {
+            $allowOverride = $this->allowOverride;
+        }
+
+        return $allowOverride === true && $request->hasHeader($this->requestHeader);
     }
 }
