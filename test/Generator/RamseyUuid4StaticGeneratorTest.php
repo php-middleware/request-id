@@ -1,10 +1,11 @@
 <?php
 
+namespace PhpMiddlewareTestTest\RequestId\Generator;
+
 use PhpMiddleware\RequestId\Generator\RamseyUuid4StaticGenerator;
+use PHPUnit_Framework_TestCase;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
-
-namespace PhpMiddlewareTestTest\RequestId\Generator;
 
 class RamseyUuid4StaticGeneratorTest extends PHPUnit_Framework_TestCase
 {
