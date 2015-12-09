@@ -2,6 +2,7 @@
 
 namespace PhpMiddleware\RequestId;
 
+use PhpMiddleware\RequestId\RequestIdProviderInterface as RequestIdProvider;
 use Psr\Http\Message\RequestInterface;
 
 final class RequestDecorator
@@ -9,8 +10,10 @@ final class RequestDecorator
     protected $requestIdProvider;
     protected $headerName;
 
-    public function __construct(RequestIdProviderInterface $requestIdProvider, $headerName = RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID)
-    {
+    public function __construct(
+        RequestIdProvider $requestIdProvider,
+        $headerName = RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID
+    ) {
         $this->requestIdProvider = $requestIdProvider;
         $this->headerName = $headerName;
     }
