@@ -2,13 +2,17 @@
 
 namespace PhpMiddlewareTestTest\RequestId;
 
+use PhpMiddleware\RequestId\Exception\InvalidRequestId;
+use PhpMiddleware\RequestId\Exception\MissingRequestId;
 use PhpMiddleware\RequestId\Generator\GeneratorInterface;
+use PhpMiddleware\RequestId\OverridePolicy\OverridePolicyInterface;
 use PhpMiddleware\RequestId\RequestIdMiddleware;
+use PHPUnit_Framework_TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
 
-class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
+class RequestIdMiddlewareTest extends PHPUnit_Framework_TestCase
 {
     protected $generator;
 
@@ -67,21 +71,21 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('123456789', $middleware->getRequestId());
     }
 
-    /**
-     * @expectedException PhpMiddleware\RequestId\Exception\MissingRequestId
-     */
     public function testTryToGetRequestIdBeforeRunMiddleware()
     {
+        $this->setExpectedException(MissingRequestId::class);
+
         $middleware = new RequestIdMiddleware($this->generator);
         $middleware->getRequestId();
     }
 
     /**
      * @dataProvider dataproviderEmptyRequestIdValues
-     * @expectedException PhpMiddleware\RequestId\Exception\InvalidRequestId
      */
     public function testTryToGenerateEmptyRequestId($emptyValue)
     {
+        $this->setExpectedException(InvalidRequestId::class);
+
         $this->generator->expects($this->once())->method('generateRequestId')->willReturn($emptyValue);
 
         $middleware = new RequestIdMiddleware($this->generator);
@@ -101,11 +105,10 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    /**
-     * @expectedException PhpMiddleware\RequestId\Exception\InvalidRequestId
-     */
     public function testTryToGenerateNotStringRequestId()
     {
+        $this->setExpectedException(InvalidRequestId::class);
+
         $this->generator->expects($this->once())->method('generateRequestId')->willReturn(1);
 
         $middleware = new RequestIdMiddleware($this->generator);
@@ -165,11 +168,9 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('987654321', $middleware->getRequestId());
     }
 
-    /**
-     * @expectedException PhpMiddleware\RequestId\Exception\MissingRequestId
-     */
     public function testDontGenerateBecouseHeaderExistsButEmpty()
     {
+        $this->setExpectedException(MissingRequestId::class);
         $this->generator->expects($this->never())->method('generateRequestId');
 
         $middleware = new RequestIdMiddleware($this->generator);
@@ -177,5 +178,41 @@ class RequestIdMiddlewareTest extends \PHPUnit_Framework_TestCase
         $response = new Response();
 
         call_user_func($middleware, $request, $response, function(){});
+    }
+
+    public function testOverridePolicyAllowOverride()
+    {
+        $this->generator->method('generateRequestId')->willReturn('123456789');
+
+        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID => '987654321']);
+
+        $policy = $this->getMock(OverridePolicyInterface::class);
+        $policy->method('isAllowToOverride')->with($request)->willReturn(true);
+        $response = new Response();
+
+        $middleware = new RequestIdMiddleware($this->generator, $policy);
+        $result = call_user_func($middleware, $request, $response, function ($request, $response) {
+            return $response;
+        });
+
+        $this->assertSame('987654321', $result->getHeaderLine(RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID));
+    }
+
+    public function testOverridePolicyDisallowOverride()
+    {
+        $this->generator->method('generateRequestId')->willReturn('123456789');
+
+        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID => '987654321']);
+
+        $policy = $this->getMock(OverridePolicyInterface::class);
+        $policy->method('isAllowToOverride')->with($request)->willReturn(false);
+        $response = new Response();
+
+        $middleware = new RequestIdMiddleware($this->generator, $policy);
+        $result = call_user_func($middleware, $request, $response, function ($request, $response) {
+            return $response;
+        });
+
+        $this->assertSame('123456789', $result->getHeaderLine(RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID));
     }
 }
