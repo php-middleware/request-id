@@ -2,7 +2,8 @@
 
 namespace PhpMiddleware\RequestId\Exception;
 
-class InvalidRequestId extends \UnexpectedValueException
-{
+use UnexpectedValueException;
 
+class InvalidRequestId extends UnexpectedValueException implements RequestIdExceptionInterface
+{
 }

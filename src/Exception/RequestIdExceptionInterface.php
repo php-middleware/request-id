@@ -2,6 +2,6 @@
 
 namespace PhpMiddleware\RequestId\Exception;
 
-class NotGenerated extends MissingRequestId
+interface RequestIdExceptionInterface
 {
 }
