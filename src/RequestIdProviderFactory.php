@@ -5,6 +5,9 @@ namespace PhpMiddleware\RequestId;
 use PhpMiddleware\RequestId\Generator\GeneratorInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class RequestIdProviderFactory implements RequestIdProviderFactoryInterface
 {
 

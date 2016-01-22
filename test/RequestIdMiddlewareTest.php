@@ -2,11 +2,10 @@
 
 namespace PhpMiddlewareTestTest\RequestId;
 
-use PhpMiddleware\RequestId\Exception\InvalidRequestId;
 use PhpMiddleware\RequestId\Exception\MissingRequestId;
-use PhpMiddleware\RequestId\Generator\GeneratorInterface;
-use PhpMiddleware\RequestId\OverridePolicy\OverridePolicyInterface;
 use PhpMiddleware\RequestId\RequestIdMiddleware;
+use PhpMiddleware\RequestId\RequestIdProviderFactoryInterface;
+use PhpMiddleware\RequestId\RequestIdProviderInterface;
 use PHPUnit_Framework_TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
@@ -16,9 +15,13 @@ class RequestIdMiddlewareTest extends PHPUnit_Framework_TestCase
 {
     public function testEmmitRequestIdToResponse()
     {
-        $this->generator->expects($this->once())->method('generateRequestId')->willReturn('123456789');
+        $requestIdProviderFactory = $this->getMock(RequestIdProviderFactoryInterface::class);
+        $requestIdProvider = $this->getMock(RequestIdProviderInterface::class);
 
-        $middleware = new RequestIdMiddleware($this->generator);
+        $requestIdProviderFactory->method('create')->willReturn($requestIdProvider);
+        $requestIdProvider->method('getRequestId')->willReturn('123456789');
+
+        $middleware = new RequestIdMiddleware($requestIdProviderFactory);
         $request = new ServerRequest();
         $response = new Response();
         $calledOut = false;
@@ -41,9 +44,13 @@ class RequestIdMiddlewareTest extends PHPUnit_Framework_TestCase
 
     public function testNotEmmitRequestIdToResponse()
     {
-        $this->generator->expects($this->once())->method('generateRequestId')->willReturn('123456789');
+        $requestIdProviderFactory = $this->getMock(RequestIdProviderFactoryInterface::class);
+        $requestIdProvider = $this->getMock(RequestIdProviderInterface::class);
 
-        $middleware = new RequestIdMiddleware($this->generator, true, null);
+        $requestIdProviderFactory->method('create')->willReturn($requestIdProvider);
+        $requestIdProvider->method('getRequestId')->willReturn('123456789');
+
+        $middleware = new RequestIdMiddleware($requestIdProviderFactory, null);
         $request = new ServerRequest();
         $response = new Response();
         $calledOut = false;
@@ -68,7 +75,9 @@ class RequestIdMiddlewareTest extends PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(MissingRequestId::class);
 
-        $middleware = new RequestIdMiddleware($this->generator);
+        $requestIdProviderFactory = $this->getMock(RequestIdProviderFactoryInterface::class);
+
+        $middleware = new RequestIdMiddleware($requestIdProviderFactory);
         $middleware->getRequestId();
     }
 }
