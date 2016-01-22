@@ -14,28 +14,30 @@ This middleware provide framework-agnostic possibility to generate and add to re
 ```json
 {
     "require": {
-        "php-middleware/request-id": "^2.0.0"
+        "php-middleware/request-id": "^3.0.0"
     }
 }
 ```
 
 ## Usage
 
-This middleware require in contructor `PhpMiddleware\RequestId\Generator\GeneratorInterface` implementation.
+This middleware require in contructor `PhpMiddleware\RequestId\RequestIdProviderFactoryInterface` implementation which
+must create a new `RequestIdProviderInterface` object. We provide `RequestIdProvider` default implementation.
 
 ```php
-$requestIdMiddleware = new PhpMiddleware\LogHttpMessages\RequestIdMiddleware($generator);
+$generator = new PhpMiddleware\RequestId\Generator\PhpUniqidGenerator();
+$requestIdProvider = new PhpMiddleware\RequestId\RequestIdProviderFactory($generator);
+$requestIdMiddleware = new PhpMiddleware\LogHttpMessages\RequestIdMiddleware($requestIdProvider);
 
 $app = new MiddlewareRunner();
 $app->add($requestIdMiddleware);
 $app->run($request, $response);
 ```
 
-All middleware constructor options:
+All Provider factory constructor options:
 
 * `PhpMiddleware\RequestId\Generator\GeneratorInterface` `$generator` - generator implementation (required)
 * `bool|PhpMiddleware\RequestId\OverridePolicy\OverridePolicyInterface` `$allowOverride` (default `true`) - if `true` and request id header exists in incoming request, then value from request header will be used in middleware, using generator will be avoid
-* `string` `$responseHeader` (default `X-Request-Id`) - request id will be added to response as header with given name. If it's not string request id will be not added to response
 * `string` `$requestHeader` (default `X-Request-Id`) - request header name
 
 How to get request id in my application?
