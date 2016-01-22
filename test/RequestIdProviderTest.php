@@ -70,7 +70,7 @@ class RequestIdProviderTest extends \PHPUnit_Framework_TestCase
     public function testDisallowOverrideButHeaderExists()
     {
         $this->generator->expects($this->once())->method('generateRequestId')->willReturn('123456789');
-        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID => '987654321']);
+        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdProvider::DEFAULT_REQUEST_HEADER => '987654321']);
 
         $provider = new RequestIdProvider($request, $this->generator, false);
         $requestId = $provider->getRequestId();
@@ -81,7 +81,7 @@ class RequestIdProviderTest extends \PHPUnit_Framework_TestCase
     public function testDoNotGenerateBecouseHeaderExists()
     {
         $this->generator->expects($this->never())->method('generateRequestId');
-        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID => '987654321']);
+        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdProvider::DEFAULT_REQUEST_HEADER => '987654321']);
 
         $provider = new RequestIdProvider($request, $this->generator);
         $requestId = $provider->getRequestId();
@@ -93,7 +93,7 @@ class RequestIdProviderTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(MissingRequestId::class);
         $this->generator->expects($this->never())->method('generateRequestId');
-        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID => '']);
+        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdProvider::DEFAULT_REQUEST_HEADER => '']);
 
         $provider = new RequestIdProvider($request, $this->generator);
         $provider->getRequestId();
@@ -103,7 +103,7 @@ class RequestIdProviderTest extends \PHPUnit_Framework_TestCase
     {
         $this->generator->method('generateRequestId')->willReturn('123456789');
 
-        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID => '987654321']);
+        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdProvider::DEFAULT_REQUEST_HEADER => '987654321']);
 
         $policy = $this->getMock(OverridePolicyInterface::class);
         $policy->method('isAllowToOverride')->with($request)->willReturn(true);
@@ -117,7 +117,7 @@ class RequestIdProviderTest extends \PHPUnit_Framework_TestCase
     public function testOverridePolicyDisallowOverride()
     {
         $this->generator->method('generateRequestId')->willReturn('123456789');
-        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID => '987654321']);
+        $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdProvider::DEFAULT_REQUEST_HEADER => '987654321']);
 
         $policy = $this->getMock(OverridePolicyInterface::class);
         $policy->method('isAllowToOverride')->with($request)->willReturn(false);
@@ -126,5 +126,20 @@ class RequestIdProviderTest extends \PHPUnit_Framework_TestCase
         $requestId = $provider->getRequestId();
 
         $this->assertSame('123456789', $requestId);
+    }
+
+    public function testUseCachedValue()
+    {
+        $this->generator->expects($this->once())->method('generateRequestId')->willReturn('123456789');
+        $request = new ServerRequest();
+
+        $provider = new RequestIdProvider($request, $this->generator, false);
+        $requestId = $provider->getRequestId();
+
+        $this->assertSame('123456789', $requestId);
+
+        $requestIdAfterSecondCall = $provider->getRequestId();
+
+        $this->assertSame('123456789', $requestIdAfterSecondCall);
     }
 }

@@ -4,6 +4,7 @@ namespace PhpMiddlewareTestTest\RequestId;
 
 use PhpMiddleware\RequestId\Exception\MissingRequestId;
 use PhpMiddleware\RequestId\RequestIdMiddleware;
+use PhpMiddleware\RequestId\RequestIdProvider;
 use PhpMiddleware\RequestId\RequestIdProviderFactoryInterface;
 use PhpMiddleware\RequestId\RequestIdProviderInterface;
 use PHPUnit_Framework_TestCase;
@@ -38,7 +39,7 @@ class RequestIdMiddlewareTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($calledOut, 'Out is not called');
         $this->assertNotSame($response, $result);
-        $this->assertEquals('123456789', $result->getHeaderLine(RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID));
+        $this->assertEquals('123456789', $result->getHeaderLine(RequestIdProvider::DEFAULT_REQUEST_HEADER));
         $this->assertSame('123456789', $middleware->getRequestId());
     }
 
@@ -67,7 +68,7 @@ class RequestIdMiddlewareTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($calledOut, 'Out is not called');
         $this->assertSame($response, $result);
-        $this->assertEquals(null, $result->getHeaderLine(RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID));
+        $this->assertEquals(null, $result->getHeaderLine(RequestIdProvider::DEFAULT_REQUEST_HEADER));
         $this->assertSame('123456789', $middleware->getRequestId());
     }
 

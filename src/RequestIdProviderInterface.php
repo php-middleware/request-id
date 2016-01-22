@@ -2,9 +2,14 @@
 
 namespace PhpMiddleware\RequestId;
 
+use PhpMiddleware\RequestId\Exception\RequestIdExceptionInterface;
+
 interface RequestIdProviderInterface
 {
-    const DEFAULT_HEADER_REQUEST_ID = 'X-Request-Id';
-
+    /**
+     * @return mixed
+     *
+     * @throws RequestIdExceptionInterface
+     */
     public function getRequestId();
 }

@@ -7,7 +7,8 @@ use Psr\Http\Message\ServerRequestInterface;
 interface RequestIdProviderFactoryInterface
 {
     /**
-     * @return RequestIdProviderInterface
+     * @param ServerRequestInterface $request
+     * @return RequestIdProvider
      */
     public function create(ServerRequestInterface $request);
 }

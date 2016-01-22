@@ -7,8 +7,10 @@ use PhpMiddleware\RequestId\Generator\GeneratorInterface;
 use PhpMiddleware\RequestId\OverridePolicy\OverridePolicyInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RequestIdProvider  implements RequestIdProviderInterface
+final class RequestIdProvider implements RequestIdProviderInterface
 {
+    const DEFAULT_REQUEST_HEADER = 'X-Request-Id';
+
     /**
      * @var ServerRequestInterface
      */
@@ -35,11 +37,17 @@ class RequestIdProvider  implements RequestIdProviderInterface
      */
     protected $requestHeader;
 
+    /**
+     * @param ServerRequestInterface $request
+     * @param GeneratorInterface $generator
+     * @param bool|OverridePolicyInterface $allowOverride
+     * @param string $requestHeader
+     */
     public function __construct(
         ServerRequestInterface $request,
         GeneratorInterface $generator,
         $allowOverride = true,
-        $requestHeader = RequestIdProviderInterface::DEFAULT_HEADER_REQUEST_ID
+        $requestHeader = self::DEFAULT_REQUEST_HEADER
     )
     {
         $this->request = $request;
@@ -48,9 +56,17 @@ class RequestIdProvider  implements RequestIdProviderInterface
         $this->requestHeader = $requestHeader;
     }
 
-
+    /**
+     * @return mixed
+     *
+     * @throws RequestIdExceptionInterface
+     */
     public function getRequestId()
     {
+        if ($this->requestId !== null) {
+            return $this->requestId;
+        }
+
         if ($this->isPossibleToGetFromRequest($this->request)) {
             $requestId = $this->request->getHeaderLine($this->requestHeader);
 
@@ -67,6 +83,8 @@ class RequestIdProvider  implements RequestIdProviderInterface
                 throw new InvalidRequestId('Request id is not a string');
             }
         }
+        $this->requestId = $requestId;
+
         return $requestId;
     }
 
