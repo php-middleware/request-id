@@ -1,13 +1,13 @@
-# request-id middleware
+# Request ID middleware for PHP
 
 [![Build Status](https://travis-ci.org/php-middleware/request-id.svg?branch=master)](https://travis-ci.org/php-middleware/request-id)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/php-middleware/request-id/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/php-middleware/request-id/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/php-middleware/request-id/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/php-middleware/request-id/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/php-middleware/request-id/badges/build.png?b=master)](https://scrutinizer-ci.com/g/php-middleware/request-id/build-status/master)
 
-PSR-7 request id middleware
+PSR-7 Request ID middleware
 
-This middleware provide framework-agnostic possibility to generate and add to request/response's header request id.
+This middleware provide framework-agnostic possibility to generate and add to request/response's header Request ID (Correlation ID).
 
 ## Installation
 
