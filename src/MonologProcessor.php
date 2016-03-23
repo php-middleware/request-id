@@ -2,6 +2,8 @@
 
 namespace PhpMiddleware\RequestId;
 
+use PhpMiddleware\RequestId\Exception\MissingRequestId;
+
 final class MonologProcessor
 {
     const KEY = 'request_id';
@@ -15,7 +17,13 @@ final class MonologProcessor
 
     public function __invoke(array $record)
     {
-        $record['extra'][self::KEY] = $this->requestIdProvider->getRequestId();
+        try {
+            $requestId = $this->requestIdProvider->getRequestId();
+        } catch (MissingRequestId $e) {
+            $requestId = null;
+        }
+        
+        $record['extra'][self::KEY] = $requestId;
 
         return $record;
     }
