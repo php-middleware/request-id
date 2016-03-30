@@ -3,7 +3,7 @@
 namespace PhpMiddleware\RequestId;
 
 use PhpMiddleware\RequestId\Exception\NotGenerated;
-use PhpMiddleware\RequestId\RequestIdProviderFactoryInterface as RequestIdProviderFactory;
+use PhpMiddleware\RequestId\RequestIdProviderFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -13,7 +13,7 @@ final class RequestIdMiddleware implements RequestIdProviderInterface
     const ATTRIBUTE_NAME = 'request-id';
 
     /**
-     * @var RequestIdProviderFactory
+     * @var RequestIdProviderFactoryInterface
      */
     protected $requestIdProviderFactory;
 
@@ -28,11 +28,11 @@ final class RequestIdMiddleware implements RequestIdProviderInterface
     protected $responseHeader;
 
     /**
-     * @param RequestIdProviderFactory $requestIdProviderFactory
+     * @param RequestIdProviderFactoryInterface $requestIdProviderFactory
      * @param string $responseHeader
      */
     public function __construct(
-        RequestIdProviderFactory $requestIdProviderFactory,
+        RequestIdProviderFactoryInterface $requestIdProviderFactory,
         $responseHeader = self::DEFAULT_RESPONSE_HEADER
     ) {
         $this->requestIdProviderFactory = $requestIdProviderFactory;

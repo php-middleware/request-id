@@ -9,7 +9,7 @@ final class RequestDecorator
     protected $requestIdProvider;
     protected $headerName;
 
-    public function __construct(RequestIdProviderInterface $requestIdProvider, $headerName = RequestIdMiddleware::DEFAULT_HEADER_REQUEST_ID)
+    public function __construct(RequestIdProviderInterface $requestIdProvider, $headerName = RequestIdMiddleware::DEFAULT_RESPONSE_HEADER)
     {
         $this->requestIdProvider = $requestIdProvider;
         $this->headerName = $headerName;
