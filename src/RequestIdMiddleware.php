@@ -49,16 +49,41 @@ final class RequestIdMiddleware implements RequestIdProviderInterface, Middlewar
      */
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $requestIdProvider = $this->requestIdProviderFactory->create($request);
-        $this->requestId = $requestIdProvider->getRequestId();
-        $requestWithAttribute = $request->withAttribute(self::ATTRIBUTE_NAME, $this->requestId);
+        $requestWithAttribute = $this->attachRequestIdToAttribute($request);
 
         $response = $delegate->process($requestWithAttribute);
 
-        if (is_string($this->responseHeader)) {
-            return $response->withHeader($this->responseHeader, $this->requestId);
+        if ($this->canAttachToResponse()) {
+            return $this->attachRequestIdToResponse($response);
         }
         return $response;
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    private function attachRequestIdToAttribute(ServerRequestInterface $request)
+    {
+        $requestIdProvider = $this->requestIdProviderFactory->create($request);
+        $this->requestId = $requestIdProvider->getRequestId();
+
+        return $request->withAttribute(self::ATTRIBUTE_NAME, $this->requestId);
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    private function attachRequestIdToResponse(ResponseInterface $response)
+    {
+        return $response->withHeader($this->responseHeader, $this->requestId);
+    }
+
+    /**
+     * @return bool
+     */
+    private function canAttachToResponse()
+    {
+        return is_string($this->responseHeader) && !empty($this->responseHeader);
     }
 
     /**
