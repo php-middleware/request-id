@@ -6,11 +6,11 @@ use PhpMiddleware\RequestId\Generator\RamseyUuid1Generator;
 use PhpMiddleware\RequestId\Generator\RamseyUuid3Generator;
 use PhpMiddleware\RequestId\Generator\RamseyUuid4Generator;
 use PhpMiddleware\RequestId\Generator\RamseyUuid5Generator;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\UuidFactoryInterface;
 use Ramsey\Uuid\UuidInterface;
 
-class RamseyFactoryUuidGeneratorTest extends PHPUnit_Framework_TestCase
+class RamseyFactoryUuidGeneratorTest extends TestCase
 {
     protected $factory;
     protected $uuid;

@@ -4,9 +4,10 @@ namespace PhpMiddlewareTestTest\RequestId;
 
 use PhpMiddleware\RequestId\RequestDecorator;
 use PhpMiddleware\RequestId\RequestIdProviderInterface;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 
-class RequestDecoratorTest extends \PHPUnit_Framework_TestCase
+class RequestDecoratorTest extends TestCase
 {
     const CUSTOM_HEADER_NAME = 'custom-header-name';
 

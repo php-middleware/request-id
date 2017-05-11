@@ -7,12 +7,12 @@ use PhpMiddleware\RequestId\RequestIdMiddleware;
 use PhpMiddleware\RequestId\RequestIdProvider;
 use PhpMiddleware\RequestId\RequestIdProviderFactoryInterface;
 use PhpMiddleware\RequestId\RequestIdProviderInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
 
-class RequestIdMiddlewareTest extends PHPUnit_Framework_TestCase
+class RequestIdMiddlewareTest extends TestCase
 {
     public function testEmmitRequestIdToResponse()
     {

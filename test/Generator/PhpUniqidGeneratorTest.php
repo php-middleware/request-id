@@ -3,9 +3,9 @@
 namespace PhpMiddlewareTestTest\RequestId\Generator;
 
 use PhpMiddleware\RequestId\Generator\PhpUniqidGenerator;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class PhpUniqidGeneratorTest extends PHPUnit_Framework_TestCase
+class PhpUniqidGeneratorTest extends TestCase
 {
     protected $generator;
 
