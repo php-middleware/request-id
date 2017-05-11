@@ -5,13 +5,11 @@ namespace PhpMiddlewareTestTest\RequestId;
 use PhpMiddleware\RequestId\Exception\MissingRequestId;
 use PhpMiddleware\RequestId\MonologProcessor;
 use PhpMiddleware\RequestId\RequestIdProviderInterface;
+use PHPUnit\Framework\TestCase;
 
-class MonologProcessorTest extends \PHPUnit_Framework_TestCase
+class MonologProcessorTest extends TestCase
 {
     protected $processor;
-    /**
-     * @var RequestIdProviderInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
     private $requestIdProvider;
 
     public function testIsRequestIdInRecord()
@@ -38,7 +36,7 @@ class MonologProcessorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->requestIdProvider = $this->getMock(RequestIdProviderInterface::class);
+        $this->requestIdProvider = $this->createMock(RequestIdProviderInterface::class);
         $this->processor         = new MonologProcessor($this->requestIdProvider);
     }
 }

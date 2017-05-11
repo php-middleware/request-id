@@ -2,13 +2,18 @@
 
 namespace PhpMiddleware\RequestId;
 
+use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use PhpMiddleware\DoublePassCompatibilityTrait;
 use PhpMiddleware\RequestId\Exception\NotGenerated;
 use PhpMiddleware\RequestId\RequestIdProviderFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class RequestIdMiddleware implements RequestIdProviderInterface
+final class RequestIdMiddleware implements RequestIdProviderInterface, MiddlewareInterface
 {
+    use DoublePassCompatibilityTrait;
+
     const DEFAULT_RESPONSE_HEADER = 'X-Request-Id';
     const ATTRIBUTE_NAME = 'request-id';
 
@@ -40,26 +45,45 @@ final class RequestIdMiddleware implements RequestIdProviderInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param callable $next
-     *
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    {
+        $requestWithAttribute = $this->attachRequestIdToAttribute($request);
+
+        $response = $delegate->process($requestWithAttribute);
+
+        if ($this->canAttachToResponse()) {
+            return $this->attachRequestIdToResponse($response);
+        }
+        return $response;
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    private function attachRequestIdToAttribute(ServerRequestInterface $request)
     {
         $requestIdProvider = $this->requestIdProviderFactory->create($request);
-
         $this->requestId = $requestIdProvider->getRequestId();
 
-        $requestWithAttribute = $request->withAttribute(self::ATTRIBUTE_NAME, $this->requestId);
+        return $request->withAttribute(self::ATTRIBUTE_NAME, $this->requestId);
+    }
 
-        $nextResponse = $next($requestWithAttribute, $response);
+    /**
+     * @return ResponseInterface
+     */
+    private function attachRequestIdToResponse(ResponseInterface $response)
+    {
+        return $response->withHeader($this->responseHeader, $this->requestId);
+    }
 
-        if (is_string($this->responseHeader)) {
-            return $nextResponse->withHeader($this->responseHeader, $this->requestId);
-        }
-        return $nextResponse;
+    /**
+     * @return bool
+     */
+    private function canAttachToResponse()
+    {
+        return is_string($this->responseHeader) && !empty($this->responseHeader);
     }
 
     /**

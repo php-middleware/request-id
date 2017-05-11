@@ -6,20 +6,20 @@ use PhpMiddleware\RequestId\Generator\RamseyUuid1Generator;
 use PhpMiddleware\RequestId\Generator\RamseyUuid3Generator;
 use PhpMiddleware\RequestId\Generator\RamseyUuid4Generator;
 use PhpMiddleware\RequestId\Generator\RamseyUuid5Generator;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\UuidFactoryInterface;
 use Ramsey\Uuid\UuidInterface;
 
-class RamseyFactoryUuidGeneratorTest extends PHPUnit_Framework_TestCase
+class RamseyFactoryUuidGeneratorTest extends TestCase
 {
     protected $factory;
     protected $uuid;
 
     protected function setUp()
     {
-        $this->factory = $this->getMock(UuidFactoryInterface::class);
+        $this->factory = $this->createMock(UuidFactoryInterface::class);
 
-        $this->uuid = $this->getMock(UuidInterface::class);
+        $this->uuid = $this->createMock(UuidInterface::class);
         $this->uuid->method('toString')->willReturn('uuid');
     }
 

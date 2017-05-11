@@ -7,17 +7,17 @@ use PhpMiddleware\RequestId\RequestIdMiddleware;
 use PhpMiddleware\RequestId\RequestIdProvider;
 use PhpMiddleware\RequestId\RequestIdProviderFactoryInterface;
 use PhpMiddleware\RequestId\RequestIdProviderInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
 
-class RequestIdMiddlewareTest extends PHPUnit_Framework_TestCase
+class RequestIdMiddlewareTest extends TestCase
 {
     public function testEmmitRequestIdToResponse()
     {
-        $requestIdProviderFactory = $this->getMock(RequestIdProviderFactoryInterface::class);
-        $requestIdProvider = $this->getMock(RequestIdProviderInterface::class);
+        $requestIdProviderFactory = $this->createMock(RequestIdProviderFactoryInterface::class);
+        $requestIdProvider = $this->createMock(RequestIdProviderInterface::class);
 
         $requestIdProviderFactory->method('create')->willReturn($requestIdProvider);
         $requestIdProvider->method('getRequestId')->willReturn('123456789');
@@ -45,8 +45,8 @@ class RequestIdMiddlewareTest extends PHPUnit_Framework_TestCase
 
     public function testNotEmmitRequestIdToResponse()
     {
-        $requestIdProviderFactory = $this->getMock(RequestIdProviderFactoryInterface::class);
-        $requestIdProvider = $this->getMock(RequestIdProviderInterface::class);
+        $requestIdProviderFactory = $this->createMock(RequestIdProviderFactoryInterface::class);
+        $requestIdProvider = $this->createMock(RequestIdProviderInterface::class);
 
         $requestIdProviderFactory->method('create')->willReturn($requestIdProvider);
         $requestIdProvider->method('getRequestId')->willReturn('123456789');
@@ -74,11 +74,12 @@ class RequestIdMiddlewareTest extends PHPUnit_Framework_TestCase
 
     public function testTryToGetRequestIdBeforeRunMiddleware()
     {
-        $this->setExpectedException(MissingRequestId::class);
-
-        $requestIdProviderFactory = $this->getMock(RequestIdProviderFactoryInterface::class);
+        $requestIdProviderFactory = $this->createMock(RequestIdProviderFactoryInterface::class);
 
         $middleware = new RequestIdMiddleware($requestIdProviderFactory);
+
+        $this->expectException(MissingRequestId::class);
+
         $middleware->getRequestId();
     }
 }

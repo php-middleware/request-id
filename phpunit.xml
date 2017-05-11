@@ -2,15 +2,10 @@
 
 <phpunit bootstrap="./vendor/autoload.php" colors="true">
     <testsuites>
-        <testsuite name="PhpMiddleware\\LogHttpMessages Tests">
+        <testsuite>
             <directory>./test</directory>
         </testsuite>
     </testsuites>
-
-    <logging>
-        <log type="coverage-clover" target="tmp/phpunit-coverage-clover.xml"/>
-        <log type="coverage-html" target="tmp/" />
-    </logging>
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
