@@ -17,9 +17,9 @@ class RamseyFactoryUuidGeneratorTest extends TestCase
 
     protected function setUp()
     {
-        $this->factory = $this->getMock(UuidFactoryInterface::class);
+        $this->factory = $this->createMock(UuidFactoryInterface::class);
 
-        $this->uuid = $this->getMock(UuidInterface::class);
+        $this->uuid = $this->createMock(UuidInterface::class);
         $this->uuid->method('toString')->willReturn('uuid');
     }
 

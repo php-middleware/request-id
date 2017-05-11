@@ -15,14 +15,14 @@ class RequestDecoratorTest extends TestCase
 
     protected function setUp()
     {
-        $requestIdProvider = $this->getMock(RequestIdProviderInterface::class);
+        $requestIdProvider = $this->createMock(RequestIdProviderInterface::class);
         $requestIdProvider->expects($this->once())->method('getRequestId')->willReturn('boo');
         $this->decorator = new RequestDecorator($requestIdProvider, self::CUSTOM_HEADER_NAME);
     }
 
     public function testIsRequestDecorated()
     {
-        $request = $this->getMock(RequestInterface::class);
+        $request = $this->createMock(RequestInterface::class);
         $request->expects($this->once())->method('withHeader')->willReturnCallback(function($name, $value) use ($request) {
             $this->assertSame(self::CUSTOM_HEADER_NAME, $name);
             $this->assertSame('boo', $value);

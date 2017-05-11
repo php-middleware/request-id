@@ -16,8 +16,8 @@ class RequestIdMiddlewareTest extends TestCase
 {
     public function testEmmitRequestIdToResponse()
     {
-        $requestIdProviderFactory = $this->getMock(RequestIdProviderFactoryInterface::class);
-        $requestIdProvider = $this->getMock(RequestIdProviderInterface::class);
+        $requestIdProviderFactory = $this->createMock(RequestIdProviderFactoryInterface::class);
+        $requestIdProvider = $this->createMock(RequestIdProviderInterface::class);
 
         $requestIdProviderFactory->method('create')->willReturn($requestIdProvider);
         $requestIdProvider->method('getRequestId')->willReturn('123456789');
@@ -45,8 +45,8 @@ class RequestIdMiddlewareTest extends TestCase
 
     public function testNotEmmitRequestIdToResponse()
     {
-        $requestIdProviderFactory = $this->getMock(RequestIdProviderFactoryInterface::class);
-        $requestIdProvider = $this->getMock(RequestIdProviderInterface::class);
+        $requestIdProviderFactory = $this->createMock(RequestIdProviderFactoryInterface::class);
+        $requestIdProvider = $this->createMock(RequestIdProviderInterface::class);
 
         $requestIdProviderFactory->method('create')->willReturn($requestIdProvider);
         $requestIdProvider->method('getRequestId')->willReturn('123456789');
@@ -76,7 +76,7 @@ class RequestIdMiddlewareTest extends TestCase
     {
         $this->setExpectedException(MissingRequestId::class);
 
-        $requestIdProviderFactory = $this->getMock(RequestIdProviderFactoryInterface::class);
+        $requestIdProviderFactory = $this->createMock(RequestIdProviderFactoryInterface::class);
 
         $middleware = new RequestIdMiddleware($requestIdProviderFactory);
         $middleware->getRequestId();

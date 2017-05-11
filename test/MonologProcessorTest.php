@@ -36,7 +36,7 @@ class MonologProcessorTest extends TestCase
 
     protected function setUp()
     {
-        $this->requestIdProvider = $this->getMock(RequestIdProviderInterface::class);
+        $this->requestIdProvider = $this->createMock(RequestIdProviderInterface::class);
         $this->processor         = new MonologProcessor($this->requestIdProvider);
     }
 }

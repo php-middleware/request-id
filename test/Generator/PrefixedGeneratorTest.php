@@ -12,7 +12,7 @@ class PrefixedGeneratorTest extends TestCase
 
     protected function setUp()
     {
-        $this->decoratedGenerator = $this->getMock(GeneratorInterface::class);
+        $this->decoratedGenerator = $this->createMock(GeneratorInterface::class);
         $this->decoratedGenerator->method('generateRequestId')->willReturn('boo');
     }
 
