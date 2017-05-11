@@ -2,13 +2,18 @@
 
 namespace PhpMiddleware\RequestId;
 
+use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use PhpMiddleware\DoublePassCompatibilityTrait;
 use PhpMiddleware\RequestId\Exception\NotGenerated;
 use PhpMiddleware\RequestId\RequestIdProviderFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class RequestIdMiddleware implements RequestIdProviderInterface
+final class RequestIdMiddleware implements RequestIdProviderInterface, MiddlewareInterface
 {
+    use DoublePassCompatibilityTrait;
+
     const DEFAULT_RESPONSE_HEADER = 'X-Request-Id';
     const ATTRIBUTE_NAME = 'request-id';
 
@@ -40,26 +45,20 @@ final class RequestIdMiddleware implements RequestIdProviderInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param callable $next
-     *
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         $requestIdProvider = $this->requestIdProviderFactory->create($request);
-
         $this->requestId = $requestIdProvider->getRequestId();
-
         $requestWithAttribute = $request->withAttribute(self::ATTRIBUTE_NAME, $this->requestId);
 
-        $nextResponse = $next($requestWithAttribute, $response);
+        $response = $delegate->process($requestWithAttribute);
 
         if (is_string($this->responseHeader)) {
-            return $nextResponse->withHeader($this->responseHeader, $this->requestId);
+            return $response->withHeader($this->responseHeader, $this->requestId);
         }
-        return $nextResponse;
+        return $response;
     }
 
     /**
