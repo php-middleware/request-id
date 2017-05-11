@@ -35,12 +35,12 @@ class RequestIdProviderTest extends TestCase
      */
     public function testTryToGenerateEmptyRequestId($emptyValue)
     {
-        $this->setExpectedException(InvalidRequestId::class);
-
         $this->generator->expects($this->once())->method('generateRequestId')->willReturn($emptyValue);
 
         $request = new ServerRequest();
         $provider = new RequestIdProvider($request, $this->generator);
+
+        $this->expectException(InvalidRequestId::class);
 
         $provider->getRequestId();
     }
@@ -89,11 +89,13 @@ class RequestIdProviderTest extends TestCase
 
     public function testDoNotGenerateBecauseHeaderExistsButEmpty()
     {
-        $this->setExpectedException(MissingRequestId::class);
         $this->generator->expects($this->never())->method('generateRequestId');
         $request = new ServerRequest([], [], 'https://github.com/php-middleware/request-id', 'GET', 'php://input', [RequestIdProvider::DEFAULT_REQUEST_HEADER => '']);
 
         $provider = new RequestIdProvider($request, $this->generator);
+
+        $this->expectException(MissingRequestId::class);
+
         $provider->getRequestId();
     }
 

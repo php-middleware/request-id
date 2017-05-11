@@ -74,11 +74,12 @@ class RequestIdMiddlewareTest extends TestCase
 
     public function testTryToGetRequestIdBeforeRunMiddleware()
     {
-        $this->setExpectedException(MissingRequestId::class);
-
         $requestIdProviderFactory = $this->createMock(RequestIdProviderFactoryInterface::class);
 
         $middleware = new RequestIdMiddleware($requestIdProviderFactory);
+
+        $this->expectException(MissingRequestId::class);
+
         $middleware->getRequestId();
     }
 }
