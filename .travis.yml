@@ -1,16 +1,19 @@
 language: php
 
-matrix:
-  fast_finish: true
-  include:
-    - php: 5.5
-    - php: 5.6
-    - php: 7
-    - php: hhvm
+php:
+  - 5.6
+  - 7.0
+  - 7.1
 
-install:
-  - travis_retry composer install --no-interaction --ignore-platform-reqs --prefer-source
-  - composer info -i
+env:
+  - DEPS=lowest
+  - DEPS=latest
+
+before_script:
+  - phpenv config-rm xdebug.ini
+  - composer self-update
+  - if [[ $DEPS == 'lowest' ]]; then composer update --prefer-stable --no-interaction --prefer-lowest ; fi
+  - if [[ $DEPS == 'latest' ]]; then composer update --prefer-stable --no-interaction ; fi
 
 script:
   - ./vendor/bin/phpunit
