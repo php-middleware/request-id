@@ -2,6 +2,7 @@
     "name": "php-middleware/request-id",
     "description": "Request Id middleware with PSR-7",
     "type": "library",
+    "license": "MIT",
     "keywords": [
         "middleware",
         "psr",
