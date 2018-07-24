@@ -7,6 +7,7 @@ use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use PhpMiddleware\DoublePassCompatibilityTrait;
 use PhpMiddleware\RequestId\Exception\NotGenerated;
 use PhpMiddleware\RequestId\RequestIdProviderFactoryInterface;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -60,7 +61,7 @@ final class RequestIdMiddleware implements RequestIdProviderInterface, Middlewar
     }
 
     /**
-     * @return ResponseInterface
+     * @return RequestInterface
      */
     private function attachRequestIdToAttribute(ServerRequestInterface $request)
     {
