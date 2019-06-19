@@ -11,7 +11,7 @@ final class Md5Generator implements GeneratorInterface
         $this->generator = $generator;
     }
 
-    public function generateRequestId()
+    public function generateRequestId(): string
     {
         return md5($this->generator->generateRequestId());
     }
