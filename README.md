@@ -11,12 +11,8 @@ This middleware provide framework-agnostic possibility to generate and add to re
 
 ## Installation
 
-```json
-{
-    "require": {
-        "php-middleware/request-id": "^3.0.0"
-    }
-}
+```bash
+composer require php-middleware/request-id
 ```
 
 ## Usage

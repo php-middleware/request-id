@@ -3,6 +3,7 @@ namespace PhpMiddleware\RequestId;
 
 use PhpMiddleware\RequestId\Exception\InvalidRequestId;
 use PhpMiddleware\RequestId\Exception\MissingRequestId;
+use PhpMiddleware\RequestId\Exception\RequestIdExceptionInterface;
 use PhpMiddleware\RequestId\Generator\GeneratorInterface;
 use PhpMiddleware\RequestId\OverridePolicy\OverridePolicyInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -11,43 +12,20 @@ final class RequestIdProvider implements RequestIdProviderInterface
 {
     const DEFAULT_REQUEST_HEADER = 'X-Request-Id';
 
-    /**
-     * @var ServerRequestInterface
-     */
     protected $request;
-
-    /**
-     * @var GeneratorInterface
-     */
     protected $generator;
-
-    /**
-     * @var bool|OverridePolicyInterface
-     */
     protected $allowOverride;
-
-    /**
-     * @var mixed
-     */
     protected $requestId;
-
-    /**
-     *
-     * @var string
-     */
     protected $requestHeader;
 
     /**
-     * @param ServerRequestInterface $request
-     * @param GeneratorInterface $generator
      * @param bool|OverridePolicyInterface $allowOverride
-     * @param string $requestHeader
      */
     public function __construct(
         ServerRequestInterface $request,
         GeneratorInterface $generator,
         $allowOverride = true,
-        $requestHeader = self::DEFAULT_REQUEST_HEADER
+        string $requestHeader = self::DEFAULT_REQUEST_HEADER
     )
     {
         $this->request = $request;
@@ -57,11 +35,9 @@ final class RequestIdProvider implements RequestIdProviderInterface
     }
 
     /**
-     * @return mixed
-     *
      * @throws RequestIdExceptionInterface
      */
-    public function getRequestId()
+    public function getRequestId(): string
     {
         if ($this->requestId !== null) {
             return $this->requestId;
@@ -88,12 +64,7 @@ final class RequestIdProvider implements RequestIdProviderInterface
         return $requestId;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return bool
-     */
-    protected function isPossibleToGetFromRequest(ServerRequestInterface $request)
+    protected function isPossibleToGetFromRequest(ServerRequestInterface $request): bool
     {
         if ($this->allowOverride instanceof OverridePolicyInterface) {
             $allowOverride = $this->allowOverride->isAllowToOverride($request);

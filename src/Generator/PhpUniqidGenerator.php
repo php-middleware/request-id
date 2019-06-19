@@ -4,32 +4,19 @@ namespace PhpMiddleware\RequestId\Generator;
 
 final class PhpUniqidGenerator implements GeneratorInterface
 {
-    /**
-     * @var string
-     */
     protected $prefix;
-
-    /**
-     * @var bool
-     */
     protected $moreEntropy;
 
     /**
-     * @param string $prefix
-     * @param bool $moreEntropy
-     *
      * @link http://php.net/manual/en/function.uniqid.php
      */
-    public function __construct($prefix = '', $moreEntropy = false)
+    public function __construct(string $prefix = '', bool $moreEntropy = false)
     {
-        $this->prefix = (string) $prefix;
-        $this->moreEntropy = (bool) $moreEntropy;
+        $this->prefix = $prefix;
+        $this->moreEntropy = $moreEntropy;
     }
 
-    /**
-     * @return string
-     */
-    public function generateRequestId()
+    public function generateRequestId(): string
     {
         return uniqid($this->prefix, $this->moreEntropy);
     }

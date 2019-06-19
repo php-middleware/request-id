@@ -8,13 +8,15 @@ use PhpMiddleware\RequestId\RequestIdProvider;
 use PhpMiddleware\RequestId\RequestIdProviderFactoryInterface;
 use PhpMiddleware\RequestId\RequestIdProviderInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
 
 class RequestIdMiddlewareTest extends TestCase
 {
-    public function testEmmitRequestIdToResponse()
+    public function testEmmitRequestIdToResponse(): void
     {
         $requestIdProviderFactory = $this->createMock(RequestIdProviderFactoryInterface::class);
         $requestIdProvider = $this->createMock(RequestIdProviderInterface::class);
@@ -24,21 +26,16 @@ class RequestIdMiddlewareTest extends TestCase
 
         $middleware = new RequestIdMiddleware($requestIdProviderFactory);
         $request = new ServerRequest();
-        $response = new Response();
-        $calledOut = false;
 
-        $outFunction = function (ServerRequestInterface $request, $response) use (&$calledOut) {
-            $calledOut = true;
-
-            $this->assertSame('123456789', $request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME));
-
-            return $response;
+        $handler = new class implements RequestHandlerInterface {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return new Response();
+            }
         };
 
-        $result = call_user_func($middleware, $request, $response, $outFunction);
+        $result = $middleware->process($request, $handler);
 
-        $this->assertTrue($calledOut, 'Out is not called');
-        $this->assertNotSame($response, $result);
         $this->assertEquals('123456789', $result->getHeaderLine(RequestIdProvider::DEFAULT_REQUEST_HEADER));
         $this->assertSame('123456789', $middleware->getRequestId());
     }
@@ -53,21 +50,16 @@ class RequestIdMiddlewareTest extends TestCase
 
         $middleware = new RequestIdMiddleware($requestIdProviderFactory, null);
         $request = new ServerRequest();
-        $response = new Response();
-        $calledOut = false;
 
-        $outFunction = function ($request, $response) use (&$calledOut) {
-            $calledOut = true;
-
-            $this->assertSame('123456789', $request->getAttribute(RequestIdMiddleware::ATTRIBUTE_NAME));
-
-            return $response;
+        $handler = new class implements RequestHandlerInterface {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return new Response();
+            }
         };
 
-        $result = call_user_func($middleware, $request, $response, $outFunction);
+        $result = $middleware->process($request, $handler);
 
-        $this->assertTrue($calledOut, 'Out is not called');
-        $this->assertSame($response, $result);
         $this->assertEquals(null, $result->getHeaderLine(RequestIdProvider::DEFAULT_REQUEST_HEADER));
         $this->assertSame('123456789', $middleware->getRequestId());
     }

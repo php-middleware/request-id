@@ -13,10 +13,7 @@ final class RamseyUuid4Generator implements GeneratorInterface
         $this->factory = $factory;
     }
 
-    /**
-     * @return string
-     */
-    public function generateRequestId()
+    public function generateRequestId(): string
     {
         return $this->factory->uuid4()->toString();
     }

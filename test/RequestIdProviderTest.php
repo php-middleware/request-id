@@ -30,32 +30,9 @@ class RequestIdProviderTest extends TestCase
         $this->assertSame('123456789',$requestId);
     }
 
-    /**
-     * @dataProvider provideEmptyRequestIdValues
-     */
-    public function testTryToGenerateEmptyRequestId($emptyValue)
+    public function testTryToGenerateEmptyRequestId()
     {
-        $this->generator->expects($this->once())->method('generateRequestId')->willReturn($emptyValue);
-
-        $request = new ServerRequest();
-        $provider = new RequestIdProvider($request, $this->generator);
-
-        $this->expectException(InvalidRequestId::class);
-
-        $provider->getRequestId();
-    }
-
-    public function provideEmptyRequestIdValues()
-    {
-        return [
-            [''],
-            [null],
-        ];
-    }
-
-    public function testTryToGenerateNotStringRequestId()
-    {
-        $this->generator->expects($this->once())->method('generateRequestId')->willReturn(1);
+        $this->generator->expects($this->once())->method('generateRequestId')->willReturn('');
 
         $request = new ServerRequest();
         $provider = new RequestIdProvider($request, $this->generator);

@@ -15,7 +15,7 @@ final class MonologProcessor
         $this->requestIdProvider = $requestIdProvider;
     }
 
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         try {
             $requestId = $this->requestIdProvider->getRequestId();

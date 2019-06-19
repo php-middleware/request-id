@@ -2,68 +2,39 @@
 
 namespace PhpMiddleware\RequestId;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
-use PhpMiddleware\DoublePassCompatibilityTrait;
 use PhpMiddleware\RequestId\Exception\NotGenerated;
-use PhpMiddleware\RequestId\RequestIdProviderFactoryInterface;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 final class RequestIdMiddleware implements RequestIdProviderInterface, MiddlewareInterface
 {
-    use DoublePassCompatibilityTrait;
-
     const DEFAULT_RESPONSE_HEADER = 'X-Request-Id';
     const ATTRIBUTE_NAME = 'request-id';
 
-    /**
-     * @var RequestIdProviderFactoryInterface
-     */
     protected $requestIdProviderFactory;
-
-    /**
-     * @var mixed
-     */
     protected $requestId;
-
-    /**
-     * @var string
-     */
     protected $responseHeader;
 
-    /**
-     * @param RequestIdProviderFactoryInterface $requestIdProviderFactory
-     * @param string $responseHeader
-     */
     public function __construct(
         RequestIdProviderFactoryInterface $requestIdProviderFactory,
-        $responseHeader = self::DEFAULT_RESPONSE_HEADER
+        ?string $responseHeader = self::DEFAULT_RESPONSE_HEADER
     ) {
         $this->requestIdProviderFactory = $requestIdProviderFactory;
         $this->responseHeader = $responseHeader;
     }
 
-    /**
-     * @return ResponseInterface
-     */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $requestWithAttribute = $this->attachRequestIdToAttribute($request);
 
-        $response = $delegate->process($requestWithAttribute);
+        $response = $handler->handle($requestWithAttribute);
 
-        if ($this->canAttachToResponse()) {
-            return $this->attachRequestIdToResponse($response);
-        }
-        return $response;
+        return $this->attachRequestIdToResponse($response);
     }
 
-    /**
-     * @return RequestInterface
-     */
-    private function attachRequestIdToAttribute(ServerRequestInterface $request)
+    private function attachRequestIdToAttribute(ServerRequestInterface $request): ServerRequestInterface
     {
         $requestIdProvider = $this->requestIdProviderFactory->create($request);
         $this->requestId = $requestIdProvider->getRequestId();
@@ -71,28 +42,18 @@ final class RequestIdMiddleware implements RequestIdProviderInterface, Middlewar
         return $request->withAttribute(self::ATTRIBUTE_NAME, $this->requestId);
     }
 
-    /**
-     * @return ResponseInterface
-     */
-    private function attachRequestIdToResponse(ResponseInterface $response)
+    private function attachRequestIdToResponse(ResponseInterface $response): ResponseInterface
     {
-        return $response->withHeader($this->responseHeader, $this->requestId);
+        if (is_string($this->responseHeader) && !empty($this->responseHeader)) {
+            return $response->withHeader($this->responseHeader, $this->requestId);
+        }
+        return $response;
     }
 
     /**
-     * @return bool
-     */
-    private function canAttachToResponse()
-    {
-        return is_string($this->responseHeader) && !empty($this->responseHeader);
-    }
-
-    /**
-     * @return mixed
-     *
      * @throws NotGenerated
      */
-    public function getRequestId()
+    public function getRequestId(): string
     {
         if ($this->requestId === null) {
             throw new NotGenerated('Request id is not generated yet');

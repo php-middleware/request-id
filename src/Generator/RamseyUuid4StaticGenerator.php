@@ -6,10 +6,7 @@ use Ramsey\Uuid\Uuid;
 
 final class RamseyUuid4StaticGenerator implements GeneratorInterface
 {
-    /**
-     * @return string
-     */
-    public function generateRequestId()
+    public function generateRequestId(): string
     {
         return Uuid::uuid4()->toString();
     }

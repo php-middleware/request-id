@@ -7,20 +7,13 @@ final class PrefixedGenerator implements GeneratorInterface
     private $prefix;
     private $generator;
 
-    /**
-     * @param string $prefix
-     * @param GeneratorInterface $generator
-     */
-    public function __construct($prefix, GeneratorInterface $generator)
+    public function __construct(string $prefix, GeneratorInterface $generator)
     {
-        $this->prefix = (string) $prefix;
+        $this->prefix = $prefix;
         $this->generator = $generator;
     }
 
-    /**
-     * @return string
-     */
-    public function generateRequestId()
+    public function generateRequestId(): string
     {
         return $this->prefix . $this->generator->generateRequestId();
     }
