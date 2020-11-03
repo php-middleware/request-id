@@ -11,8 +11,7 @@ class RamseyUuid4StaticGeneratorTest extends TestCase
 {
     protected $generator;
 
-
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generator = new RamseyUuid4StaticGenerator();
     }

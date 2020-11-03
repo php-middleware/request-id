@@ -15,7 +15,7 @@ class RamseyFactoryUuidGeneratorTest extends TestCase
     protected $factory;
     protected $uuid;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->factory = $this->createMock(UuidFactoryInterface::class);
 

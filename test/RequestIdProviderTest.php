@@ -14,7 +14,7 @@ class RequestIdProviderTest extends TestCase
 {
     protected $generator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->generator = $this->createMock(GeneratorInterface::class);
     }
