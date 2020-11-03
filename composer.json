@@ -18,7 +18,7 @@
     "require-dev": {
         "ramsey/uuid": "^3.9.3",
         "zendframework/zend-diactoros": "^2.2.1",
-        "phpunit/phpunit": "^7.5.13 | ^8.5.8 | ^9.4.2"
+        "phpunit/phpunit": "^7.5.20 | ^8.5.8 | ^9.4.2"
     },
     "suggest": {
         "ramsey/uuid": "To use Ramsey\\Uuid 3.0 generator"
