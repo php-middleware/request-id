@@ -3,4 +3,4 @@ composer.lock
 tmp/
 phpunit-coverage-clover.xml
 .idea
-
+.phpunit.result.cache

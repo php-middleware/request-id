@@ -10,7 +10,7 @@ class PrefixedGeneratorTest extends TestCase
 {
     protected $decoratedGenerator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->decoratedGenerator = $this->createMock(GeneratorInterface::class);
         $this->decoratedGenerator->method('generateRequestId')->willReturn('boo');

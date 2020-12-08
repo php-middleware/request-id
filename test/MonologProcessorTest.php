@@ -34,7 +34,7 @@ class MonologProcessorTest extends TestCase
         $this->assertNull($newRecord['extra'][MonologProcessor::KEY]);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->requestIdProvider = $this->createMock(RequestIdProviderInterface::class);
         $this->processor         = new MonologProcessor($this->requestIdProvider);

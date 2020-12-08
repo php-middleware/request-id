@@ -10,7 +10,7 @@ class Md5GeneratorTest extends TestCase
 {
     protected $generator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $decoratedGenerator = $this->createMock(GeneratorInterface::class);
         $decoratedGenerator->method('generateRequestId')->willReturn('boo');

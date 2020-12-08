@@ -13,7 +13,7 @@ class RequestDecoratorTest extends TestCase
 
     protected $decorator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $requestIdProvider = $this->createMock(RequestIdProviderInterface::class);
         $requestIdProvider->expects($this->once())->method('getRequestId')->willReturn('boo');
