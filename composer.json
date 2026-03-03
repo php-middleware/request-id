@@ -16,7 +16,7 @@
         "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
-        "ramsey/uuid": "^3.9.3",
+        "ramsey/uuid": "^3.9.3 || ^4.0.0",
         "laminas/laminas-diactoros": "^2.2.1",
         "phpunit/phpunit": "^7.5.20 | ^8.5.8 | ^9.4.2"
     },
